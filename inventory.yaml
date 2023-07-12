@@ -1,1 +1,8 @@
-# Inventory goes here.
+all:
+  hosts:
+    vault01:
+      ansible_host: 10.0.96.61   
+    vault02:
+      ansible_host: 10.0.96.62
+    vault03:
+      ansible_host: 10.0.96.63

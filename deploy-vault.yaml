@@ -1,22 +1,30 @@
-- tasks:
+- name: Deploy vault
+  hosts: all
 
-  - name: Deploy Vault
-    apt:
-      name: "{{ item }}"
-      state: present
-      update_cache: yes
-    with_items:
-      - curl
-      - sudo
-      - gpg
-      - software-properties-common
+  tasks:
+    - name: Deploy Vault
+      apt:
+        name: "{{ item }}"
+        state: present
+        update_cache: yes
+      with_items:
+        - curl
+        - sudo
+        - gpg
+        - software-properties-common
 
-  - name: Add HashiCorp GPG key
-    apt_key:
-      url: https://apt.releases.hashicorp.com/gpg
-      state: present
-      
-  - name: Add HashiCorp repository
-    apt_repository:
-      repo: deb [arch=amd64] https://apt.releases.hashicorp.com {{ ansible_distribution_release }} main
-      state: present
+    - name: Add HashiCorp GPG key
+      apt_key:
+        url: https://apt.releases.hashicorp.com/gpg
+        state: present
+        
+    - name: Add HashiCorp repository
+      apt_repository:
+        repo: deb [arch=amd64] https://apt.releases.hashicorp.com {{ ansible_distribution_release }} main
+        state: present
+    
+    - name: Install Vault
+      apt:
+        name: vault
+        state: present
+        update_cache: yes
