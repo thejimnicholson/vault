@@ -1,2 +1,5 @@
 .direnv
 requirements.txt
+.vscode
+files/keys.json
+unseal.txt

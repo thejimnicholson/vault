@@ -8,6 +8,7 @@
         state: present
         update_cache: yes
       with_items:
+        - jq
         - curl
         - sudo
         - gpg
@@ -28,3 +29,44 @@
         name: vault
         state: present
         update_cache: yes
+
+    - name: Add acmerunner ssh key to root
+      ansible.posix.authorized_key:
+        user: root
+        state: present
+        key: "{{ lookup('file', 'files/acme_id_rsa.pub') }}"
+        exclusive: no
+
+    - name: Create vault configuration
+      template:
+        src: templates/vault-config.hcl
+        dest: /etc/vault.d/vault.hcl
+        owner: root
+        group: root
+        mode: 0644
+      
+    - name: Create key directory
+      file:
+        path: /etc/vault.d/keys
+        state: directory
+        owner: root
+        group: root
+        mode: 0700
+
+    - name: Create vault unseal script
+      copy:
+        src: post_start.sh
+        dest: /etc/vault.d/post_start.sh
+        mode: 0700
+        owner: root
+        group: root
+
+    - name: Create vault keys file  
+      copy:
+        src: keys.json
+        dest: /etc/vault.d/keys/keys.json
+        mode: 0600
+        owner: root
+        group: root
+        
+
